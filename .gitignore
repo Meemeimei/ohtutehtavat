@@ -1,0 +1,10 @@
+/RiippuvuuksienInjektointi1/build/
+/RiippuvuuksienInjektointi1/.nb-gradle/
+/viikko1/NhlStatistics1/.nb-gradle/
+/viikko1/NhlStatistics1/build/
+
+*.tmp
+build/
+.gradle/
+
+/.nb-gradle/
