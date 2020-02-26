@@ -1,80 +1,69 @@
 package ohtu;
 
-public class TennisGame {
-    
-    private int m_score1 = 0;
-    private int m_score2 = 0;
-    private String player1Name;
-    private String player2Name;
+import java.util.HashMap;
 
-    public TennisGame(String player1Name, String player2Name) {
-        this.player1Name = player1Name;
-        this.player2Name = player2Name;
+public class TennisGame {
+
+    private HashMap<String, Integer> scoreboard;
+    private String playerOneKey;
+    private String playerTwoKey;
+
+    public TennisGame(String playerOneName, String playerTwoName) {
+        scoreboard = new HashMap<>();
+        playerOneKey = playerOneName;
+        playerTwoKey = playerTwoName;
+        scoreboard.put(playerOneName, 0);
+        scoreboard.put(playerTwoName, 0);
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            m_score1 += 1;
-        else
-            m_score2 += 1;
+        scoreboard.put(playerName, scoreboard.get(playerName) + 1);
     }
 
     public String getScore() {
-        String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                        score = "Love-All";
-                    break;
-                case 1:
-                        score = "Fifteen-All";
-                    break;
-                case 2:
-                        score = "Thirty-All";
-                    break;
-                case 3:
-                        score = "Forty-All";
-                    break;
-                default:
-                        score = "Deuce";
-                    break;
-                
+        int playerOneScore = scoreboard.get(playerOneKey);
+        int playerTwoScore = scoreboard.get(playerTwoKey);
+
+        if (playerOneScore >= 4 || playerTwoScore >= 4) {
+            if (playerOneScore == playerTwoScore) {
+                return "Deuce";
+            }
+            return advantageAsString(playerOneScore, playerTwoScore);
+        } else {
+            String score = pointsAsString(playerOneScore);
+            score += "-";
+            if (playerOneScore != playerTwoScore) {
+                return score += pointsAsString(playerTwoScore);
+            } else {
+                return score += "All";
             }
         }
-        else if (m_score1>=4 || m_score2>=4)
-        {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+    }
+
+    private String pointsAsString(int points) {
+        switch (points) {
+            case 0:
+                return "Love";
+            case 1:
+                return "Fifteen";
+            case 2:
+                return "Thirty";
         }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
-            }
+        return "Forty";
+    }
+
+    private String advantageAsString(int pointsOne, int pointsTwo) {
+        int pointsForOne = pointsOne - pointsTwo;
+
+        switch (pointsForOne) {
+            case -1:
+                return "Advantage player2";
+            case 1:
+                return "Advantage player1";
         }
-        return score;
+        if (pointsForOne >= 2) {
+            return "Win for player1";
+        }
+        return "Win for player2";
     }
 }
